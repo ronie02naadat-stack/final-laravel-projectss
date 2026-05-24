@@ -15,7 +15,17 @@ use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\AdminDashboardController;
 
 Route::get('/', function () {
-    return "Laravel is running";
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->user_type === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->user_type === 'teacher') {
+            return redirect()->route('teacher.dashboard');
+        } else {
+            return redirect()->route('student.dashboard');
+        }
+    }
+    return redirect('/login');
 });
 
 // Authentication routes
